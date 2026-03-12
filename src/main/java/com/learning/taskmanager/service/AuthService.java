@@ -48,7 +48,7 @@ public class AuthService {
     public AuthResponse createUser(AuthRequest authRequest){
         var user = userMapper.toEntity(authRequest);
         user.setPassword(passwordEncoder.encode(authRequest.password()));
-        var role = roleRepository.findByName(RoleStatus.USER_ROLE)
+        var role = roleRepository.findByName(RoleStatus.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
         user.setRoles(Set.of(role));
         var saveUser = userRepository.save(user);

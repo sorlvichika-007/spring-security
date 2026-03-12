@@ -13,14 +13,14 @@ public class RoleInitializer {
     @Bean
     CommandLineRunner initRoles(RoleRepository roleRepository){
         return args -> {
-            if (!roleRepository.existsByName(RoleStatus.ADMIN_ROLE)){
+            if (!roleRepository.existsByName(RoleStatus.ROLE_ADMIN)){
                 var admin = new Role();
-                admin.setName(RoleStatus.ADMIN_ROLE);
+                admin.setName(RoleStatus.ROLE_USER);
                 roleRepository.save(admin);
             }
-            if (!roleRepository.existsByName(RoleStatus.USER_ROLE)){
+            if (!roleRepository.existsByName(RoleStatus.ROLE_USER)){
                 var user = new Role();
-                user.setName(RoleStatus.USER_ROLE);
+                user.setName(RoleStatus.ROLE_USER);
                 roleRepository.save(user);
             }
         };
