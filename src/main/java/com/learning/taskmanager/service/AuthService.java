@@ -9,6 +9,7 @@ import com.learning.taskmanager.model.AppUser;
 import com.learning.taskmanager.model.RoleStatus;
 import com.learning.taskmanager.repository.RoleRepository;
 import com.learning.taskmanager.repository.UserRepository;
+import com.learning.taskmanager.security.jwt.Jwt;
 import com.learning.taskmanager.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

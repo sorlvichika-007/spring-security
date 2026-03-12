@@ -15,7 +15,7 @@ public class RoleInitializer {
         return args -> {
             if (!roleRepository.existsByName(RoleStatus.ROLE_ADMIN)){
                 var admin = new Role();
-                admin.setName(RoleStatus.ROLE_USER);
+                admin.setName(RoleStatus.ROLE_ADMIN);
                 roleRepository.save(admin);
             }
             if (!roleRepository.existsByName(RoleStatus.ROLE_USER)){

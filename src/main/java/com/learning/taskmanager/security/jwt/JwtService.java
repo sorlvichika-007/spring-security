@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,6 @@ public class JwtService {
     private String SECRET_KEY;
     @Value("${spring.jwt.accessExpiration}")
     private Long expirationMs;
-    private final Claims claims;
 
     public String generateToken(AppUser user){
         return Jwts.builder()
@@ -34,33 +34,24 @@ public class JwtService {
                 .compact();
     }
 
-
-    public Claims parseToken(String token){
+    public Jwt parseToken(String token){
         try {
-            return Jwts.parser()
-                    .verifyWith(getKey())
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+            var claims = getClaims(token);
+            return new Jwt(claims,getKey());
         } catch (JwtException e) {
             return null;
         }
-    }
-
-    public Long getUserId(){
-        return Long.valueOf(claims.getSubject());
-    }
-
-    public boolean isExpiration(String token){
-        return claims.getExpiration().before(new Date());
-    }
-
-    public RoleStatus getRole(){
-        return RoleStatus.valueOf(claims.get("role",String.class));
     }
 
     private SecretKey getKey(){
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
+    private Claims getClaims(String token){
+        return Jwts.parser()
+                .verifyWith(getKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
 }
