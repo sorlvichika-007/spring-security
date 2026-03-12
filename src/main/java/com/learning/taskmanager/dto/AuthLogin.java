@@ -1,4 +1,4 @@
 package com.learning.taskmanager.dto;
 
-public record AuthLogin() {
+public record AuthLogin(String email,String password) {
 }

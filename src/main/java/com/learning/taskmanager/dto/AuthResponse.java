@@ -1,4 +1,11 @@
 package com.learning.taskmanager.dto;
 
-public record AuthResponse() {
+import java.util.Set;
+
+public record AuthResponse(
+        Long id,
+        String username,
+        String email,
+        Set<String> roles
+) {
 }

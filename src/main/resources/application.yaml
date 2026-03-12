@@ -1,3 +1,14 @@
 spring:
   application:
     name: TaskManager
+  datasource:
+    url: jdbc:mysql://localhost:3306/testDb
+    username: root
+    password: Str0ngP@ssw0rd!
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  jwt:
+    secretKey: 76bBA4pkYa5n1wjy5BK/72wqOZz25ntNLeXjO35DUII=
+    accessExpiration: 400
