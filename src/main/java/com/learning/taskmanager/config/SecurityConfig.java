@@ -1,5 +1,6 @@
 package com.learning.taskmanager.config;
 
+import com.learning.taskmanager.model.PermissionStatus;
 import com.learning.taskmanager.security.CustomUserDetailsService;
 import com.learning.taskmanager.security.JwtAccessDeniedHandler;
 import com.learning.taskmanager.security.JwtAuthenticationEntryPoint;
@@ -38,7 +39,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/users").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/users").hasAuthority(PermissionStatus.TASK_WRITE.name())
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

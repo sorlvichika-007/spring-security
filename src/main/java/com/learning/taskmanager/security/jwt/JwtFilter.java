@@ -42,7 +42,7 @@ public class JwtFilter extends OncePerRequestFilter {
         Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
         roles.forEach(role ->
-                authorities.add(new SimpleGrantedAuthority("ROLE_"+role)));
+                authorities.add(new SimpleGrantedAuthority(role)));
 
         permissions.forEach(permission ->
                 authorities.add(new SimpleGrantedAuthority(permission)));

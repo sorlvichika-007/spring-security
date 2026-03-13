@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,7 @@ public class JwtService {
                 .claim("username",user.getUsername())
                 .claim("email",user.getEmail())
                 .claim("role",user.getRoles().stream().map(role -> role.getName().name()).toList())
-                .claim("permission",user.getRoles().stream().flatMap(role -> role.getPermissions().stream()).map(p -> p.getPermission().name()).toList())
+                .claim("permission",user.getRoles().stream().flatMap(role -> role.getPermissions().stream()).map(p -> p.getPermission().name()).collect(Collectors.toSet()))
                 .issuedAt(new Date())
                 .signWith(getKey())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * expirationMs))
