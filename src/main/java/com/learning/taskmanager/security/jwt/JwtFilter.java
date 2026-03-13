@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -35,10 +36,16 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        var roles = jwt.getRole(token);
-        List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .toList();
+        var roles = jwt.getRoles();
+        var permissions = jwt.getPermissions();
+
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+
+        roles.forEach(role ->
+                authorities.add(new SimpleGrantedAuthority("ROLE_"+role)));
+
+        permissions.forEach(permission ->
+                authorities.add(new SimpleGrantedAuthority(permission)));
 
         var authentication = new UsernamePasswordAuthenticationToken(
                 jwt.getUserId(),

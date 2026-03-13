@@ -12,4 +12,4 @@ spring:
   jwt:
     secretKey: 76bBA4pkYa5n1wjy5BK/72wqOZz25ntNLeXjO35DUII=
     accessExpiration: 700
-    refreshExporation: 843600
+    refreshExpiration: 843600

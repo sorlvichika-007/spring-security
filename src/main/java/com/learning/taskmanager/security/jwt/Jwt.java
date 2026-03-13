@@ -10,6 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class Jwt {
+
     private final Claims claims;
     private final SecretKey secretKey;
 
@@ -21,23 +22,18 @@ public class Jwt {
         return Long.valueOf(claims.getSubject());
     }
 
-    public List<String> getRole(String token){
-        return parse(token).get("role", List.class);
+    public List<String> getRoles(){
+        return claims.get("role", List.class);
     }
 
-    private Claims parse(String token){
-        return Jwts.parser()
-                .verifyWith(secretKey)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+    public List<String> getPermissions(){
+        return claims.get("permission", List.class);
     }
 
-    public String toString(){
+    public String generate(){
         return Jwts.builder()
                 .claims(claims)
                 .signWith(secretKey)
                 .compact();
     }
-
 }

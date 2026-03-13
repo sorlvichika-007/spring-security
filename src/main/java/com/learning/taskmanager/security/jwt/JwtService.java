@@ -19,7 +19,7 @@ public class JwtService {
     private String SECRET_KEY;
     @Value("${spring.jwt.accessExpiration}")
     private Long expirationMs;
-    @Value("${spring.jwt.refreshExporation}")
+    @Value("${spring.jwt.refreshExpiration}")
     private Long refreshExpiration;
 
     public String generateToken(AppUser user){
@@ -28,6 +28,7 @@ public class JwtService {
                 .claim("username",user.getUsername())
                 .claim("email",user.getEmail())
                 .claim("role",user.getRoles().stream().map(role -> role.getName().name()).toList())
+                .claim("permission",user.getRoles().stream().flatMap(role -> role.getPermissions().stream()).map(p -> p.getPermission().name()).toList())
                 .issuedAt(new Date())
                 .signWith(getKey())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * expirationMs))
