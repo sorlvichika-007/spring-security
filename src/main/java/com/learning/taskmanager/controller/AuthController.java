@@ -5,13 +5,11 @@ import com.learning.taskmanager.dto.AuthRequest;
 import com.learning.taskmanager.dto.AuthResponse;
 import com.learning.taskmanager.dto.JwtResponse;
 import com.learning.taskmanager.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -26,8 +24,13 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> loginUser(@RequestBody AuthLogin authLogin){
+    public ResponseEntity<JwtResponse> loginUser(@RequestBody AuthLogin authLogin, HttpServletResponse response){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(authService.login(authLogin));
+                .body(authService.login(authLogin,response));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtResponse> refreshToken(@CookieValue(value = "refreshToken") String refreshToken){
+        return ResponseEntity.ok(new JwtResponse(authService.refreshToken(refreshToken).toString()));
     }
 }

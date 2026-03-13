@@ -11,4 +11,5 @@ spring:
       ddl-auto: update
   jwt:
     secretKey: 76bBA4pkYa5n1wjy5BK/72wqOZz25ntNLeXjO35DUII=
-    accessExpiration: 400
+    accessExpiration: 700
+    refreshExporation: 843600

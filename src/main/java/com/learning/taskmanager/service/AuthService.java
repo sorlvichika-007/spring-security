@@ -9,8 +9,9 @@ import com.learning.taskmanager.model.AppUser;
 import com.learning.taskmanager.model.RoleStatus;
 import com.learning.taskmanager.repository.RoleRepository;
 import com.learning.taskmanager.repository.UserRepository;
-import com.learning.taskmanager.security.jwt.Jwt;
 import com.learning.taskmanager.security.jwt.JwtService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +33,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public JwtResponse login(AuthLogin authLogin){
+    public JwtResponse login(AuthLogin authLogin, HttpServletResponse response){
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authLogin.email(),
@@ -41,6 +42,25 @@ public class AuthService {
         );
         var user = userRepository.findByEmailWithRoles(authLogin.email())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        var accessToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        var cookie = new Cookie("refreshToken",refreshToken);
+        cookie.setPath("/api/v1/auth/refresh");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(604800);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
+        return new JwtResponse(accessToken);
+    }
+
+    public JwtResponse refreshToken(String refreshToken){
+        var jwt = jwtService.parseToken(refreshToken);
+        if (jwt == null || jwt.isExpiration(refreshToken)){
+            throw new RuntimeException("Expiration");
+        }
+        var user = userRepository.findById(jwt.getUserId()).orElseThrow();
         var accessToken = jwtService.generateToken(user);
 
         return new JwtResponse(accessToken);
